@@ -1,2 +1,7 @@
+.cache-main
 *.class
 *.log
+/bin/
+project/
+target/
+.settings/
