@@ -1,7 +1,7 @@
 package markov
 
 import collection.mutable.Stack
-import org.scalatest._
+import org.scalatest.FunSuite
 
 class InterpreterSpec extends FunSuite {
 
