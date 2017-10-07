@@ -1,6 +1,5 @@
 package markov
 
-import collection.mutable.Stack
 import org.scalatest.FunSuite
 
 class InterpreterSpec extends FunSuite {
@@ -38,6 +37,7 @@ class InterpreterSpec extends FunSuite {
   }
 
   //TODO: Order or rules should matter, rules are applied in the order of definition
+  //TODO: Only one and the first occurrence of the rule's left part is substituted
   //TODO: No rules provided
   //TODO: What happens with a non-terminating algorithm?
 }
