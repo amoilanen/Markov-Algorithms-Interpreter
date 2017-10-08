@@ -36,7 +36,24 @@ class InterpreterSpec extends FunSuite {
     assert(evaluation == expectedEvaluation)
   }
 
-  //TODO: Test that . is interpreted as a dot symbol, not as any symbol
+  test("dot is interpreted as a literal, not as 'any' symbol") {
+    val dotRule = ContinuingRule(".", "")
+    val algorithm = Algorithm(List(
+      dotRule
+    ))
+    val input = "1."
+    val evaluation = Interpreter.execute(algorithm, input)
+
+    val expectedEvaluation = AlgorithmEvaluation(List(
+      RuleEvaluation("1.", "1", dotRule),
+    ))
+
+    assert(evaluation == expectedEvaluation)
+  }
+
+  //TODO: No rules left to apply -> algorithm terminates
+  //TODO: Algorithm terminates after a terminating rule
+  //TODO: Algorithm does not terminate after a non-terminating rule
   //TODO: Order or rules should matter, rules are applied in the order of definition
   //TODO: Only one and the first occurrence of the rule's left part is substituted
   //TODO: No rules provided

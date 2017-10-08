@@ -1,12 +1,14 @@
 package markov
 
+import java.util.regex.Pattern
+
 import scala.annotation.tailrec
 
 trait Rule {
   def from: String
   def to: String
   def apply(inputBefore: String): RuleEvaluation = {
-    val inputAfter = inputBefore.replaceFirst(from, to)
+    val inputAfter = inputBefore.replaceFirst(Pattern.quote(from), to)
 
     RuleEvaluation(inputBefore, inputAfter, this)
   }
