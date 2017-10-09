@@ -51,7 +51,21 @@ class InterpreterSpec extends FunSuite {
     assert(evaluation == expectedEvaluation)
   }
 
-  //TODO: No rules left to apply -> algorithm terminates
+  test("if no rules to apply, there are no evaluation steps") {
+    val replaceOnesRule = ContinuingRule("1", "0")
+    val algorithm = Algorithm(List(
+      replaceOnesRule
+    ))
+    val input = "0"
+    val evaluation = Interpreter.execute(algorithm, input)
+
+    val expectedEvaluation = AlgorithmEvaluation(List())
+
+    assert(evaluation == expectedEvaluation)
+  }
+
+  //TODO: Read provided algorithm file from the file system and evaluate it
+
   //TODO: Algorithm terminates after a terminating rule
   //TODO: Algorithm does not terminate after a non-terminating rule
   //TODO: Order or rules should matter, rules are applied in the order of definition
