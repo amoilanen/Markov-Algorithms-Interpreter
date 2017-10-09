@@ -25,7 +25,7 @@ class InterpreterSpec extends FunSuite {
     val input = "111"
     val evaluation = Interpreter.execute(changeOnesToZeros, input)
 
-    val expectedEvaluation = AlgorithmEvaluation(List(
+    val expectedEvaluation = AlgorithmEvaluation(input, List(
       RuleEvaluation("111", "q111", startAlgorithmRule),
       RuleEvaluation("q111", "0q11", changeOneToZeroRule),
       RuleEvaluation("0q11", "00q1", changeOneToZeroRule),
@@ -44,7 +44,7 @@ class InterpreterSpec extends FunSuite {
     val input = "1."
     val evaluation = Interpreter.execute(algorithm, input)
 
-    val expectedEvaluation = AlgorithmEvaluation(List(
+    val expectedEvaluation = AlgorithmEvaluation(input, List(
       RuleEvaluation("1.", "1", dotRule),
     ))
 
@@ -59,12 +59,14 @@ class InterpreterSpec extends FunSuite {
     val input = "0"
     val evaluation = Interpreter.execute(algorithm, input)
 
-    val expectedEvaluation = AlgorithmEvaluation(List())
+    val expectedEvaluation = AlgorithmEvaluation(input, List())
 
     assert(evaluation == expectedEvaluation)
   }
 
   //TODO: Read provided algorithm file from the file system and evaluate it
+  //TODO: Command line arguments
+  //TODO: Package the license, examples, JAR file and Shell script in a nice way like
 
   //TODO: Algorithm terminates after a terminating rule
   //TODO: Algorithm does not terminate after a non-terminating rule
