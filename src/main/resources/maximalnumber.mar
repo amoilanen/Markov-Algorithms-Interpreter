@@ -1,0 +1,35 @@
+#Determines the maximal number among two numbers
+
+q0>0q
+q1>0p
+p1>1p
+#Right argument is not less than the left
+q,>,s
+
+p,>,r
+r0>0r
+r1>0
+#Left argument is not less than the right
+r)>t)
+
+#Returning right argument
+s0>1s
+s1>1s
+s)>j
+1j>j1
+,j>j
+0j>j
+(j>j
+maxj>.
+
+#Returning left argument
+t)>t
+0t>t
+,t>z
+0z>z1
+1z>z1
+(z>z
+maxz>.
+
+#Entry point to the algorithm
+(>(q

@@ -1,0 +1,37 @@
+#Tests whether a given string from 0 and 1 is a palindrome 
+#That is, that it reads from left to right the same as from right to left
+
+#Remember the first symbol of the string
+q1>{p1}
+q0>{p0}
+
+#Empty string
+q>.yes
+
+#Move the pointer to the right end of the string
+{p1}11>1{p1}1
+{p1}10>1{p1}0
+{p1}01>0{p1}1
+{p1}00>0{p1}0
+{p0}11>1{p0}1
+{p0}10>1{p0}0
+{p0}01>0{p0}1
+{p0}00>0{p0}0
+
+#Pointer stands at the right end of the string
+{p1}1>
+{p1}0>no
+{p0}1>no
+{p0}0>
+
+#Erase 0 and 1 before 'no' 
+1no>no
+0no>no
+no>.no
+
+#There are no symbols left in the string. This is possible only if the string is a palindrome.
+{p1}>.yes
+{p0}>.yes
+
+#Entry point to the algorithm
+>q
