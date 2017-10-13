@@ -64,8 +64,6 @@ class InterpreterSpec extends FunSuite {
     assert(evaluation == expectedEvaluation)
   }
 
-  //TODO: Read provided algorithm file from the file system and evaluate it
-  //TODO: Command line arguments
   //TODO: Package the license, examples, JAR file and Shell script in a nice way like
 
   //TODO: Algorithm terminates after a terminating rule
@@ -75,6 +73,9 @@ class InterpreterSpec extends FunSuite {
   //TODO: No rules provided
   //TODO: What happens with a non-terminating algorithm?
   //TODO: '>' is not an allowed symbol
+
+  //TODO: Add tests for the parser
+  //TODO: Add tests for the  Markov algorithm examples
 
   //TODO: REPL mode, algorithm is input as alg="q1>0q >> q0>0q >> q>. >> >q"
   //Then REPL prints alg=Algorithm(...)
