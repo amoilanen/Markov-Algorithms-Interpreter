@@ -15,14 +15,14 @@ trait Rule {
 case class ContinuingRule(from: String, to: String) extends Rule {
 
   override def toString: String = {
-    s"ContinuingRule: $from -> $to"
+    s"$from -> $to"
   }
 }
 
 case class TerminatingRule(from: String, to: String) extends Rule {
 
   override def toString: String = {
-    s"TerminatingRule: $from -> $to"
+    s"$from ->. $to (terminating)"
   }
 }
 
