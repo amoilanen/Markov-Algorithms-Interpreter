@@ -30,4 +30,17 @@ case class TerminatingRule(from: String, to: String) extends Rule {
   }
 }
 
+object Rule {
+  def apply(left: String, right: String): Rule = {
+    val isTerminating = right.contains(".")
+    val from = left
+    val to = right.replace(".", "")
+    if (isTerminating) {
+      TerminatingRule(from, to)
+    } else {
+      ContinuingRule(from, to)
+    }
+  }
+}
+
 case class Algorithm(rules: List[Rule])
