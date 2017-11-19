@@ -8,10 +8,10 @@ object Interpreter {
 
     @tailrec
     def executeNextRules(algorithm: Algorithm, input: String, steps: List[RuleEvaluation]): List[RuleEvaluation] = {
-      val nextApplicableRule = algorithm.rules.find(rule => input.contains(rule.from))
+      val nextApplicableRule = algorithm.rules.find(_.isApplicable(input))
       nextApplicableRule match {
         case Some(rule) => {
-          val step = rule.apply(input)
+          val step = rule.evaluate(input)
           val inputAfterRuleApplication = step.after
           val updatedSteps = steps :+ step
 

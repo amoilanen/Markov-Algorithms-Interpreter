@@ -1,7 +1,6 @@
 package markov
 
 import scala.annotation.tailrec
-import scala.io.Source
 
 object OptionName extends Enumeration {
   type OptionName = Value

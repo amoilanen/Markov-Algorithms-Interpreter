@@ -64,8 +64,6 @@ class InterpreterSpec extends FunSuite {
     assert(evaluation == expectedEvaluation)
   }
 
-  //TODO: Package the license, examples, JAR file and Shell script in a nice way like
-
   //TODO: Algorithm terminates after a terminating rule
   //TODO: Algorithm does not terminate after a non-terminating rule
   //TODO: Order or rules should matter, rules are applied in the order of definition
@@ -81,4 +79,6 @@ class InterpreterSpec extends FunSuite {
   //Then REPL prints alg=Algorithm(...)
   //Then alg 111 would print all the evaluation steps and the final result
   //TODO: File evaluation mode: will load an algorithm in the provided file and apply it against the provided input
+
+  //TODO: Package the license, examples, JAR file and Shell script in a nice way like
 }
