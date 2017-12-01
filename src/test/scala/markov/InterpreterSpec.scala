@@ -1,15 +1,12 @@
 package markov
 
-import org.scalatest.FunSpec
-import java.util.{EmptyStackException, Stack}
-
-import org.scalatest._
+import org.scalatest.{FunSpec, Matchers}
 
 class InterpreterSpec extends FunSpec with Matchers {
 
-  describe("Evaluation") {
+  describe("evaluation") {
 
-    describe("Simple algorithm") {
+    describe("simple algorithm") {
 
       it("should evaluate") {
 
@@ -18,10 +15,10 @@ class InterpreterSpec extends FunSpec with Matchers {
         //q0>0q
         //q>.
         //>q
-        val changeOneToZeroRule = ContinuingRule("q1", "0q")
-        val leaveZeroInPlaceRule = ContinuingRule("q0", "0q")
-        val finishAlgorithmRule = TerminatingRule("q", "")
-        val startAlgorithmRule = ContinuingRule("", "q")
+        val changeOneToZeroRule = Rule("q1", "0q")
+        val leaveZeroInPlaceRule = Rule("q0", "0q")
+        val finishAlgorithmRule = Rule("q", ".")
+        val startAlgorithmRule = Rule("", "q")
         val changeOnesToZeros = Algorithm(List(
           changeOneToZeroRule,
           leaveZeroInPlaceRule,
@@ -39,15 +36,14 @@ class InterpreterSpec extends FunSpec with Matchers {
           RuleEvaluation("00q1", "000q", changeOneToZeroRule),
           RuleEvaluation("000q", "000", finishAlgorithmRule),
         ))
-
         evaluation should equal(expectedEvaluation)
       }
     }
 
-    describe("dot symbol in the from part of the rule") {
+    describe("special characters") {
 
-      it("should interpret dot as a literal, not as 'any' symbol") {
-        val dotRule = ContinuingRule(".", "")
+      it("should interpret dot in left rule part as a literal, not as 'any' symbol") {
+        val dotRule = Rule(".", "")
         val algorithm = Algorithm(List(
           dotRule
         ))
@@ -57,15 +53,35 @@ class InterpreterSpec extends FunSpec with Matchers {
         val expectedEvaluation = AlgorithmEvaluation(input, List(
           RuleEvaluation("1.", "1", dotRule),
         ))
-
         assert(evaluation == expectedEvaluation)
       }
     }
 
-    describe("no rules apply") {
+    describe("termination") {
 
-      it("should have not evaluation steps") {
-        val replaceOnesRule = ContinuingRule("1", "0")
+      it("should stop after terminating rule") {
+        val replaceOneWithTwo = Rule("1", "2")
+        val replaceTwoWithThree = Rule("2", ".3")
+        val replaceThreeWithFour = Rule("3", "4")
+        val algorithm = Algorithm(List(
+          replaceOneWithTwo,
+          replaceTwoWithThree,
+          replaceThreeWithFour
+        ))
+        val input = "1"
+
+        val evaluation = Interpreter.execute(algorithm, input)
+
+        val expectedEvaluation = AlgorithmEvaluation(input, List(
+          RuleEvaluation("1", "2", replaceOneWithTwo),
+          RuleEvaluation("2", "3", replaceTwoWithThree)
+        ))
+        assert(evaluation == expectedEvaluation)
+        assert(evaluation.result == expectedEvaluation.result)
+      }
+
+      it("should stop if there are no rules to apply") {
+        val replaceOnesRule = Rule("1", "0")
         val algorithm = Algorithm(List(
           replaceOnesRule
         ))
@@ -73,22 +89,40 @@ class InterpreterSpec extends FunSpec with Matchers {
         val evaluation = Interpreter.execute(algorithm, input)
 
         val expectedEvaluation = AlgorithmEvaluation(input, List())
-
         assert(evaluation == expectedEvaluation)
+        assert(evaluation.result == expectedEvaluation.result)
+      }
+
+      it("should continue if there is a rule that can be applied") {
+        val replaceOnesRule = Rule("1", "0")
+        val algorithm = Algorithm(List(
+          replaceOnesRule
+        ))
+        val input = "1"
+        val evaluation = Interpreter.execute(algorithm, input)
+
+        val expectedEvaluation = AlgorithmEvaluation(input, List(
+          RuleEvaluation("1", "0", replaceOnesRule)
+        ))
+        assert(evaluation == expectedEvaluation)
+        assert(evaluation.result == expectedEvaluation.result)
       }
     }
   }
 }
 
-  //TODO: Algorithm terminates after a terminating rule
-  //TODO: Algorithm does not terminate after a non-terminating rule
+  //TODO: DSL for defining algorithms and rules?
+
   //TODO: Order or rules should matter, rules are applied in the order of definition
   //TODO: Only one and the first occurrence of the rule's left part is substituted
   //TODO: No rules provided
   //TODO: What happens with a non-terminating algorithm?
+
   //TODO: '>' is not an allowed symbol
 
   //TODO: Add tests for the parser
+  //TODO: Add tests for the interpreter itself?
+  //TODO: Add tests for command line parsing
   //TODO: Add tests for the  Markov algorithm examples
 
   //TODO: REPL mode, algorithm is input as alg="q1>0q >> q0>0q >> q>. >> >q"
