@@ -11,107 +11,76 @@ class InterpreterSpec extends FunSpec with Matchers {
       it("should evaluate") {
 
         //#Changes ones to zeros
-        //q1>0q
-        //q0>0q
-        //q>.
-        //>q
-        val changeOneToZeroRule = Rule("q1", "0q")
-        val leaveZeroInPlaceRule = Rule("q0", "0q")
-        val finishAlgorithmRule = Rule("q", ".")
-        val startAlgorithmRule = Rule("", "q")
-        val changeOnesToZeros = Algorithm(List(
-          changeOneToZeroRule,
-          leaveZeroInPlaceRule,
-          finishAlgorithmRule,
-          startAlgorithmRule
-        ))
+        val algorithm =
+          "q1" -> "0q" &
+          "q0" -> "0q" &
+          "q" -> "." &
+          "" -> "q"
 
-        val input = "111"
-        val evaluation = Interpreter.execute(changeOnesToZeros, input)
+        val evaluation = Interpreter.execute(algorithm, "111")
 
-        val expectedEvaluation = AlgorithmEvaluation(input, List(
-          RuleEvaluation("111", "q111", startAlgorithmRule),
-          RuleEvaluation("q111", "0q11", changeOneToZeroRule),
-          RuleEvaluation("0q11", "00q1", changeOneToZeroRule),
-          RuleEvaluation("00q1", "000q", changeOneToZeroRule),
-          RuleEvaluation("000q", "000", finishAlgorithmRule),
-        ))
+        val expectedEvaluation =
+          ("111" to "q111" by "" -> "q") &
+          ("q111" to "0q11" by "q1" -> "0q") &
+          ("0q11" to "00q1" by "q1" -> "0q") &
+          ("00q1" to "000q" by "q1" -> "0q") &
+          ("000q" to "000" by "q" -> ".")
         evaluation should equal(expectedEvaluation)
+        assert(evaluation.result == expectedEvaluation.result)
       }
     }
 
     describe("special characters") {
 
       it("should interpret dot in left rule part as a literal, not as 'any' symbol") {
-        val dotRule = Rule(".", "")
-        val algorithm = Algorithm(List(
-          dotRule
-        ))
-        val input = "1."
-        val evaluation = Interpreter.execute(algorithm, input)
+        val algorithm = "." -> ""
 
-        val expectedEvaluation = AlgorithmEvaluation(input, List(
-          RuleEvaluation("1.", "1", dotRule),
-        ))
+        val evaluation = Interpreter.execute(algorithm, "1.")
+
+        val expectedEvaluation = ("1." to "1" by "." -> "").only
         assert(evaluation == expectedEvaluation)
+        assert(evaluation.result == expectedEvaluation.result)
       }
     }
 
     describe("termination") {
 
       it("should stop after terminating rule") {
-        val replaceOneWithTwo = Rule("1", "2")
-        val replaceTwoWithThree = Rule("2", ".3")
-        val replaceThreeWithFour = Rule("3", "4")
-        val algorithm = Algorithm(List(
-          replaceOneWithTwo,
-          replaceTwoWithThree,
-          replaceThreeWithFour
-        ))
-        val input = "1"
+        val algorithm =
+          "1" -> "2" &
+          "2" -> ".3" &
+          "3" -> "4"
 
-        val evaluation = Interpreter.execute(algorithm, input)
+        val evaluation = Interpreter.execute(algorithm, "1")
 
-        val expectedEvaluation = AlgorithmEvaluation(input, List(
-          RuleEvaluation("1", "2", replaceOneWithTwo),
-          RuleEvaluation("2", "3", replaceTwoWithThree)
-        ))
+        val expectedEvaluation =
+          ("1" to "2" by "1" -> "2") &
+          ("2" to "3" by "2" -> ".3")
         assert(evaluation == expectedEvaluation)
         assert(evaluation.result == expectedEvaluation.result)
       }
 
       it("should stop if there are no rules to apply") {
-        val replaceOnesRule = Rule("1", "0")
-        val algorithm = Algorithm(List(
-          replaceOnesRule
-        ))
-        val input = "0"
-        val evaluation = Interpreter.execute(algorithm, input)
+        val algorithm = "1" -> "0"
+        val evaluation = Interpreter.execute(algorithm, "0")
 
-        val expectedEvaluation = AlgorithmEvaluation(input, List())
+        val expectedEvaluation = AlgorithmEvaluation("0", List())
         assert(evaluation == expectedEvaluation)
         assert(evaluation.result == expectedEvaluation.result)
       }
 
       it("should continue if there is a rule that can be applied") {
-        val replaceOnesRule = Rule("1", "0")
-        val algorithm = Algorithm(List(
-          replaceOnesRule
-        ))
+        val algorithm = "1" -> "0"
         val input = "1"
         val evaluation = Interpreter.execute(algorithm, input)
 
-        val expectedEvaluation = AlgorithmEvaluation(input, List(
-          RuleEvaluation("1", "0", replaceOnesRule)
-        ))
+        val expectedEvaluation = ("1" to "0" by "1" -> "0").only
         assert(evaluation == expectedEvaluation)
         assert(evaluation.result == expectedEvaluation.result)
       }
     }
   }
 }
-
-  //TODO: DSL for defining algorithms and rules?
 
   //TODO: Order or rules should matter, rules are applied in the order of definition
   //TODO: Only one and the first occurrence of the rule's left part is substituted

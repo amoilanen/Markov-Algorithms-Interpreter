@@ -30,6 +30,12 @@ case class TerminatingRule(from: String, to: String) extends Rule {
   }
 }
 
+case class RuleBuilder(left: String) {
+
+  def ->(right: String): Rule =
+    Rule.apply(left, right)
+}
+
 object Rule {
   def apply(left: String, right: String): Rule = {
     val isTerminating = right.contains(".")
@@ -43,4 +49,8 @@ object Rule {
   }
 }
 
-case class Algorithm(rules: List[Rule])
+case class Algorithm(rules: List[Rule]) {
+
+  def &(nextRule: Rule): Algorithm =
+    Algorithm(rules :+ nextRule)
+}
